@@ -1,5 +1,7 @@
 let nn;
 let lr_slider;
+let test_inputs = [];
+let resolution = 10;
 
 let training_data = [{
     inputs: [0, 0],
@@ -21,8 +23,19 @@ let training_data = [{
 
 function setup() {
   createCanvas(400, 400);
+  //dl.setBackend('cpu');
   nn = new NeuralNetwork(2, 4, 1);
   lr_slider = createSlider(0.01, 0.5, 0.1, 0.01);
+
+  let cols = width / resolution;
+  let rows = height / resolution;
+  for (let i = 0; i < cols; i++) {
+    for (let j = 0; j < rows; j++) {
+      let x1 = i / cols;
+      let x2 = j / rows;
+      test_inputs.push([x1, x2]);
+    }
+  }
 }
 
 let testing = 0;
@@ -35,25 +48,25 @@ function draw() {
   //   console.log('done');
   //   noLoop();
   // }
-
-  for (let i = 0; i < 1; i++) {
+  let batch_inputs = [],
+    batch_outputs = [];
+  for (let i = 0; i < 10; i++) {
     let data = random(training_data);
-    nn.train(data.inputs, data.outputs);
+    batch_inputs[i] = data.inputs;
+    batch_outputs[i] = data.outputs;
+    // nn.train(data.inputs, data.outputs);
   }
-
+  nn.trainBatch(batch_inputs, batch_outputs);
   //nn.setLearningRate(lr_slider.value());
-
-  let resolution = 10;
   let cols = width / resolution;
   let rows = height / resolution;
+  batch_outputs = nn.predictBatch(test_inputs);
   for (let i = 0; i < cols; i++) {
     for (let j = 0; j < rows; j++) {
-      let x1 = i / cols;
-      let x2 = j / rows;
-      let inputs = [x1, x2];
-      let y = nn.predict(inputs);
+
+      //let y = nn.predict(inputs);
       noStroke();
-      fill(y * 255);
+      fill(batch_outputs.pop() * 255);
       rect(i * resolution, j * resolution, resolution, resolution);
     }
   }
