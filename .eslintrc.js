@@ -12,15 +12,11 @@ module.exports = {
       "warn",
       2
     ],
-    "linebreak-style": [
-      "off",
-      "windows"
-    ],
     "quotes": [
       "off",
       "double"
     ],
-    "no-console": "off",
+    "no-console": "warn",
     "semi": [
       "error",
       "always"
