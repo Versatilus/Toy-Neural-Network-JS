@@ -1,3 +1,8 @@
+// ESLint comment code to quiet my linter. It also provides a form of documentation.
+/* global NeuralNetwork, createCanvas, background, key, createGraphics, nf, loadMNIST,
+   select, mouseIsPressed, image, pmouseX, pmouseY, mouseX, mouseY, createImage */
+/* exported setup, draw, keyPressed */
+
 let mnist;
 
 
@@ -8,19 +13,19 @@ let test_index = 0;
 let total_tests = 0;
 let total_correct = 0;
 
-
-
 let nn;
-let train_image;
 
+let train_image;
 let user_digit;
 let user_has_drawing = false;
 
 let user_guess_ele;
 let percent_ele;
 
+
 function setup() {
-  createCanvas(400, 200).parent('container');
+  createCanvas(400, 200)
+    .parent('container');
   nn = new NeuralNetwork(784, 64, 10);
   user_digit = createGraphics(200, 200);
   user_digit.pixelDensity(1);
@@ -30,11 +35,12 @@ function setup() {
   user_guess_ele = select('#user_guess');
   percent_ele = select('#percent');
 
-  loadMNIST(function(data) {
+  loadMNIST(function (data) {
     mnist = data;
     console.log(mnist);
   });
 }
+
 
 function train(show) {
   let inputs = [];
@@ -62,17 +68,10 @@ function train(show) {
   let targets = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   targets[label] = 1;
 
-  // console.log(inputs);
-  // console.log(targets);
-
-  //console.log(train_index);
-
-  let prediction = nn.predict(inputs);
-  let guess = findMax(prediction);
-
   nn.train(inputs, targets);
   train_index = (train_index + 1) % mnist.train_labels.length;
 }
+
 
 function testing() {
   let inputs = [];
@@ -92,7 +91,6 @@ function testing() {
   let percent = 100 * (total_correct / total_tests);
   percent_ele.html(nf(percent, 2, 2) + '%');
 
-
   test_index++;
   if (test_index == mnist.test_labels.length) {
     test_index = 0;
@@ -101,17 +99,12 @@ function testing() {
     total_tests = 0;
     total_correct = 0;
   }
-
-
-
-
-
 }
 
 
 function guessUserDigit() {
   let img = user_digit.get();
-  if(!user_has_drawing) {
+  if (!user_has_drawing) {
     user_guess_ele.html('_');
     return img;
   }
@@ -131,9 +124,7 @@ function guessUserDigit() {
 function draw() {
   background(0);
 
-  let user = guessUserDigit();
-  //image(user, 0, 0);
-
+  guessUserDigit();
 
   if (mnist) {
     let total1 = 5;
@@ -159,13 +150,13 @@ function draw() {
   }
 }
 
+
 function keyPressed() {
   if (key == ' ') {
     user_has_drawing = false;
     user_digit.background(0);
   }
 }
-
 
 
 function findMax(arr) {
@@ -178,5 +169,4 @@ function findMax(arr) {
     }
   }
   return index;
-
 }
