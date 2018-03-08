@@ -5,7 +5,6 @@
 
 let mnist;
 
-
 let train_index = 0;
 
 // testing variables
@@ -22,10 +21,8 @@ let user_has_drawing = false;
 let user_guess_ele;
 let percent_ele;
 
-
 function setup() {
-  createCanvas(400, 200)
-    .parent('container');
+  createCanvas(400, 200).parent('container');
   nn = new NeuralNetwork(784, 64, 10);
   user_digit = createGraphics(200, 200);
   user_digit.pixelDensity(1);
@@ -35,12 +32,11 @@ function setup() {
   user_guess_ele = select('#user_guess');
   percent_ele = select('#percent');
 
-  loadMNIST(function (data) {
+  loadMNIST(function(data) {
     mnist = data;
     console.log(mnist);
   });
 }
-
 
 function train(show) {
   let inputs = [];
@@ -72,7 +68,6 @@ function train(show) {
   train_index = (train_index + 1) % mnist.train_labels.length;
 }
 
-
 function testing() {
   let inputs = [];
   for (let i = 0; i < 784; i++) {
@@ -84,7 +79,7 @@ function testing() {
   let prediction = nn.predict(inputs);
   let guess = findMax(prediction);
   total_tests++;
-  if (guess == label) {
+  if (guess === label) {
     total_correct++;
   }
 
@@ -92,7 +87,7 @@ function testing() {
   percent_ele.html(nf(percent, 2, 2) + '%');
 
   test_index++;
-  if (test_index == mnist.test_labels.length) {
+  if (test_index === mnist.test_labels.length) {
     test_index = 0;
     console.log('finished test set');
     console.log(percent);
@@ -100,7 +95,6 @@ function testing() {
     total_correct = 0;
   }
 }
-
 
 function guessUserDigit() {
   let img = user_digit.get();
@@ -120,7 +114,6 @@ function guessUserDigit() {
   return img;
 }
 
-
 function draw() {
   background(0);
 
@@ -129,7 +122,7 @@ function draw() {
   if (mnist) {
     let total1 = 5;
     for (let i = 0; i < total1; i++) {
-      if (i == total1 - 1) {
+      if (i === total1 - 1) {
         train(true);
       } else {
         train(false);
@@ -150,14 +143,12 @@ function draw() {
   }
 }
 
-
 function keyPressed() {
-  if (key == ' ') {
+  if (key === ' ') {
     user_has_drawing = false;
     user_digit.background(0);
   }
 }
-
 
 function findMax(arr) {
   let record = 0;

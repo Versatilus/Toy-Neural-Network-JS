@@ -8,8 +8,8 @@ let lr_slider;
 let test_inputs = [];
 let resolution = 10;
 
-/* eslint-disable indent*/
-let training_data = [{
+let training_data = [
+  {
     inputs: [0, 0],
     outputs: [0]
   },
@@ -26,7 +26,6 @@ let training_data = [{
     outputs: [0]
   }
 ];
-/* eslint-enable indent*/
 
 function setup() {
   createCanvas(400, 400);
@@ -59,8 +58,7 @@ function draw() {
   let cols = canvas.width / resolution;
   let rows = canvas.height / resolution;
   let scratch = nn.predictBatch(test_inputs);
-  let outputs = dl.tidy(() => (scratch.flatten()
-    .getValues()));
+  let outputs = dl.tidy(() => scratch.flatten().getValues());
   scratch.dispose();
   for (let i = 0; i < cols; i++) {
     for (let j = 0; j < rows; j++) {
