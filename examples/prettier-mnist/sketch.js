@@ -25,8 +25,7 @@ let twto = 0;
 let twa = 250;
 let nn;
 let test_image;
-let current_test_image = Array(784)
-  .fill(0);
+let current_test_image = Array(784).fill(0);
 let user_digit;
 let user_has_drawing = false;
 
@@ -37,8 +36,7 @@ let total_trained_ele;
 let canvasSize = () => [800, 600];
 
 function setup() {
-  createCanvas(...canvasSize())
-    .parent('container');
+  createCanvas(...canvasSize()).parent('container');
   // noStroke();
 
   stroke(51, 127);
@@ -54,7 +52,7 @@ function setup() {
   percent_ele = select('#percent');
   total_trained_ele = select('#total_trained');
 
-  loadMNIST(function (data) {
+  loadMNIST(function(data) {
     mnist = data;
     train();
   });
@@ -65,8 +63,13 @@ function train() {
 
   if (mnist) {
     Math.max(average_frame_time, 16.666);
-    let iterations = max(~~((1000.0 / desired_frame_rate - (average_frame_time)) /
-      (training_batch_size * average_training_time)), 1);
+    let iterations = max(
+      ~~(
+        (1000.0 / desired_frame_rate - average_frame_time) /
+        (training_batch_size * average_training_time)
+      ),
+      1
+    );
     for (let k = 0; k < iterations; k++) {
       let ts = millis();
       let batch_images = Array(training_batch_size);
@@ -84,8 +87,8 @@ function train() {
       }
       nn.trainBatch(batch_images, batch_labels);
       train_total += training_batch_size;
-      average_training_time = (average_training_time * 4 + ((millis() - ts) / training_batch_size)) /
-        5;
+      average_training_time =
+        (average_training_time * 4 + (millis() - ts) / training_batch_size) / 5;
     }
   } else {
     time_training_started = millis();
@@ -94,11 +97,14 @@ function train() {
 }
 
 function testing() {
-  let
-    current, labels = [],
-    images = Array.from({
-      'length': test_batch_size
-    }, () => []);
+  let current,
+    labels = [],
+    images = Array.from(
+      {
+        length: test_batch_size
+      },
+      () => []
+    );
 
   for (let j = 0; j < images.length; j++) {
     current = ~~random(mnist.test_images.length);
@@ -108,13 +114,14 @@ function testing() {
     labels[j] = mnist.test_labels[current];
   }
   let scratch = nn.predictBatch(images);
-  let predictions = dl.tidy(() => (scratch.flatten()
-    .getValues()));
+  let predictions = dl.tidy(() => scratch.flatten().getValues());
   scratch.dispose();
   for (let i = 0; i < labels.length; i++) {
-    let guess = findMax(predictions.slice(i * nn.output_nodes, (i + 1) * nn.output_nodes));
+    let guess = findMax(
+      predictions.slice(i * nn.output_nodes, (i + 1) * nn.output_nodes)
+    );
     total_tests++;
-    if (guess == labels[i]) {
+    if (guess === labels[i]) {
       total_correct++;
     }
   }
@@ -129,7 +136,6 @@ function testing() {
     total_tests = 0;
     total_correct = 0;
   }
-
 }
 
 function guessUserDigit() {
@@ -150,34 +156,40 @@ function guessUserDigit() {
   return img;
 }
 
-
 function draw() {
   // setTimeout(train, 0);
   let ts = millis();
 
-
-  if (frameCount % 15 == 0)
-    guessUserDigit();
+  if (frameCount % 15 === 0) guessUserDigit();
 
   if (mnist) {
     testing();
 
     twa = (twa * 9 + (train_total - twto) / ((millis() - twti) * 0.001)) / 10;
     /* eslint-disable indent*/
-    total_trained_ele.html(train_total + " (" + nf(twa, 0, 2) + " samples/s windowed, " + nf(
-        train_total / ((millis() - time_training_started) * 0.001), 0, 2) +
-      " samples/s overall)");
+    total_trained_ele.html(
+      train_total +
+        ' (' +
+        nf(twa, 0, 2) +
+        ' samples/s windowed, ' +
+        nf(train_total / ((millis() - time_training_started) * 0.001), 0, 2) +
+        ' samples/s overall)'
+    );
     /* eslint-enable indent*/
-    if (frameCount % 61 == 0) {
+    if (frameCount % 61 === 0) {
       current_test_image = mnist.test_images[test_index];
       let ymax = ~~sqrt(current_test_image.length);
       let xmax = ymax;
-      bubbleSize = (test_image.height / xmax);
+      bubbleSize = test_image.height / xmax;
       let offset = bubbleSize / 2;
       for (let i = 0; i < ymax; i++)
         for (let j = 0; j < xmax; j++) {
           test_image.fill(current_test_image[i * ymax + j]);
-          test_image.ellipse(offset + j * bubbleSize, offset + i * bubbleSize, bubbleSize);
+          test_image.ellipse(
+            offset + j * bubbleSize,
+            offset + i * bubbleSize,
+            bubbleSize
+          );
         }
       twti = millis();
       twto = train_total;
@@ -201,7 +213,7 @@ function draw() {
 }
 
 function keyPressed() {
-  if (key == ' ') {
+  if (key === ' ') {
     user_has_drawing = false;
     user_digit.background(0);
   }
@@ -217,5 +229,4 @@ function findMax(arr) {
     }
   }
   return index;
-
 }
