@@ -9,3 +9,5 @@ Data transfer between main system memory and GPU memory seems to be the largest 
 
 *   [XOR Visualization](./xor/)
     A simple and elegant mapping of logical XOR to two-dimensional space. The small training data set and intense demand for prediction results makes this especially sensitive to buffer creation and transfer overhead. Batch processing makes this feasible.
+
+*   *TODO*Add more examples.
