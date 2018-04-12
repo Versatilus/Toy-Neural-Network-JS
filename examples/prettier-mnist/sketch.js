@@ -114,7 +114,7 @@ function testing() {
     labels[j] = mnist.test_labels[current];
   }
   let scratch = nn.predictBatch(images);
-  let predictions = dl.tidy(() => scratch.flatten().getValues());
+  let predictions = tf.tidy(() => scratch.flatten().dataSync());
   scratch.dispose();
   for (let i = 0; i < labels.length; i++) {
     let guess = findMax(

@@ -29,7 +29,7 @@ let training_data = [
 
 function setup() {
   createCanvas(400, 400);
-  //dl.setBackend('cpu');
+  //tf.setBackend('cpu');
   nn = new NeuralNetwork(2, 4, 1);
   lr_slider = createSlider(0.01, 0.5, 0.1, 0.01);
 
@@ -58,7 +58,7 @@ function draw() {
   let cols = canvas.width / resolution;
   let rows = canvas.height / resolution;
   let scratch = nn.predictBatch(test_inputs);
-  let outputs = dl.tidy(() => scratch.flatten().getValues());
+  let outputs = tf.tidy(() => scratch.dataSync());
   scratch.dispose();
   for (let i = 0; i < cols; i++) {
     for (let j = 0; j < rows; j++) {
